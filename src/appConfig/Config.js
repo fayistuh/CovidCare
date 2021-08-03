@@ -11,7 +11,7 @@ export default {
     bg_color: '#f5f0e1',
     appVersion: '1.0',
     general_Token: '',
-    Slider1: require('../../assets/images/care6.png'),
+    Slider1: theme == 'YELLOW' ? require('../../assets/images/care1.png') : require('../../assets/images/care8.png'),
     Slider2: require("../../assets/images/care2.png"),
     Slider3: require("../../assets/images/care3.png"),
     // Slider4: require('../../assets/images/care4.png')
