@@ -18,6 +18,7 @@ import appImages from '../../appConfig/Config'
 
 import Swiper from 'react-native-swiper/src';
 import Fonts from '../../appConfig/Fonts';
+import Config from '../../appConfig/Config';
 
 const OnBoardingScreen = ({ navigation }) => {
 
@@ -127,7 +128,7 @@ const styles = StyleSheet.create({
         fontSize: 25,
         margin: 5,
         paddingLeft: 10,
-        color: '#FCB913'
+        color: Config.dark
     },
 
     imageText: {

@@ -51,7 +51,7 @@ function OTPScreen({ navigation, route }) {
                     Snackbar.show({
                         duration: Snackbar.LENGTH_LONG,
                         text: "OTP Matched",
-                        backgroundColor: "#4C95B9",
+                        backgroundColor: "#FCB913",
                     });
                     getUserDetails(res.data.authcode)
                     storeData(res.data)
@@ -95,7 +95,7 @@ function OTPScreen({ navigation, route }) {
                     Snackbar.show({
                         duration: Snackbar.LENGTH_LONG,
                         text: "OTP Sent",
-                        backgroundColor: "#4C95B9",
+                        backgroundColor: "#FCB913",
                     });
                 }
                 else {
@@ -121,6 +121,9 @@ function OTPScreen({ navigation, route }) {
             await AsyncStorage.setItem('@userToken', jsonValue)
             setAuthToken(RES_DATA.authcode)
             if (RES_DATA.registered == true) {
+                AsyncStorage.setItem('is_otp', 'true');
+                AsyncStorage.setItem('is_aadh', 'true');
+
                 navigation.dispatch(
                     CommonActions.reset({
                         index: 0,
@@ -132,6 +135,7 @@ function OTPScreen({ navigation, route }) {
                 );
             }
             else {
+                AsyncStorage.setItem('is_otp', 'true');
                 navigation.navigate('adhar')
             }
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { StyleSheet, Text, View, ScrollView, Modal, TouchableOpacity, BackHandler, Platform } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, Modal, TouchableOpacity, BackHandler, Alert, ActivityIndicator } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import Config from '../../appConfig/Config'
 import Fonts from '../../appConfig/Fonts'
@@ -12,54 +12,62 @@ import Share from "react-native-share";
 import AppContext from '../../appConfig/constant'
 import API from '../../appConfig/api'
 import Apiconstants from '../../appConfig/APIConstants'
-
-// const dataURL = "http://covec.ddns.net:5000/api/tests/get_result_pdf"
+import Snackbar from "react-native-snackbar";
 
 export default function index(props) {
-    const { userDetials } = useContext(AppContext)
+    const { userDetials, authToken } = useContext(AppContext)
     const { testImage, covidTestKitScanDetails, code, testId } = props.route.params
 
     const [invoicePath, setInvoicePath] = useState(null)
-    const [invoicePathIOS, setInvoicePathIOS] = useState()
-
     const [invoiceModal, setInvoiceModal] = useState(false)
-    const [pdfValue, setPdfValue] = useState(null)
+    const [pdfValue, setPdfValue] = useState('')
+    const [shouldShow, setShouldShow] = useState(false)
+    const [loading, setLoading] = useState(true)
     // useEffect(() => {
     //     console.warn(testImage)
     // }, [])
 
 
     const checkPermission = () => {
-        if (Platform.OS == 'android') {
-            request(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE).then((result) => {
-                if (result == 'granted') {
-                    console.warn(result)
-                    genarateReport()
-                }
-                else {
-                    console.warn(result)
-                }
 
-            });
+        if (result == 'granted') {
+            console.warn(result)
+            console.log('perfectly worked', pdfValue)
+            // getpdf()
+            let pdfdata = pdfValue
+            props.navigation.navigate('pdfScreen', { pdfdata })
+            // genarateReport()
         }
         else {
-            genarateReport()
+            console.warn(result)
         }
+
+
     }
 
     useEffect(() => {
-        // setPdfValue(true)
+        setLoading(true)
+        setPdfValue(true)
         var data = new FormData();
-        // data.append('authcode', code);
-        data.append('authcode', 'c8db156d7be4a86d397c35df73be2709');
-        // data.append('test_id', testId)
-        data.append('test_id', '1')
+        data.append('authcode', authToken);
+        // data.append('authcode', 'c8db156d7be4a86d397c35df73be2709');
+        data.append('test_id', testId)
+        // data.append('test_id', '1')
         console.log('data', data)
+        // Snackbar.show({
+        //     duration: Snackbar.LENGTH_LONG,
+        //     text: "Download Started Successfully......",
+        //     backgroundColor: "green",
+        // });
+        // Alert.alert('Pdf is downloading......')
         // console.log('api', Apiconstants.GET_RESULT_PDF)
         API(Apiconstants.GET_RESULT_PDF, data, "POST", null)
             .then((res) => {
+                setLoading(false)
                 setPdfValue(res.data)
+                setShouldShow(true)
                 console.log('value of pdf', res.data)
+
             }).catch((error) => {
                 console.warn(error);
             });
@@ -84,7 +92,6 @@ export default function index(props) {
     }, []);
 
     const genarateReport = async () => {
-
         var inVoice = `
         <!DOCTYPE html>  
         <html>  
@@ -130,10 +137,8 @@ export default function index(props) {
         console.log('PDF PATH', file.filePath)
     }
 
-
-    const resourceType = 'url';
     const resources = {
-        // file: Platform.OS === 'ios' ? invoicePathIOS + ".pdf" : invoicePath,
+        file: Platform.OS === 'ios' ? invoicePathIOS + ".pdf" : invoicePath,
         // url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
         // url: 'https://docs.google.com/document/d/1_ySJbc7fSgjB9ipGhoBIx-mYZcQ2d8MpfavbYm8k7Ec/export?format=pdf',
         url: pdfValue,
@@ -151,7 +156,6 @@ export default function index(props) {
             .catch((err) => { console.warn('ERRR') });
     }
 
-
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <Header
@@ -161,11 +165,10 @@ export default function index(props) {
                 <View style={{ height: 200, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                     <View>
                         <Text style={{ fontFamily: Fonts.regular, color: Config.dark }}>Test Result</Text>
-                        {/* <Text style={{ fontFamily: Fonts.regular, color: '#D21111', fontSize: 25 }}>{covidTestKitScanDetails.result}</Text> */}
+                        <Text style={{ fontFamily: Fonts.regular, color: '#D21111', fontSize: 25 }}>{covidTestKitScanDetails.result}</Text>
                     </View>
                     <FastImage
                         source={{ uri: testImage }}
-                        // source={{ uri: '' }}
                         style={{ height: 100, width: 100, borderRadius: 10, backgroundColor: '#E6E6E6' }}
                     />
                 </View>
@@ -174,7 +177,6 @@ export default function index(props) {
                     <View>
                         <Text style={styles.headFonts}>KIT Number</Text>
                         <Text style={styles.dataFont}>{code}</Text>
-                        {/* <Text style={styles.dataFont}>72611</Text> */}
                     </View>
                     {/* <View>
                         <Text style={styles.headFonts}>Name</Text>
@@ -189,6 +191,11 @@ export default function index(props) {
                         <Text style={styles.dataFont}>{userDetials.uId}</Text>
                     </View> */}
                 </View>
+
+                {loading ? (
+                    <ActivityIndicator color="#0000ff" size="small" />
+                ) : null}
+
             </ScrollView>
             <Button
                 Title='Re Scan'
@@ -197,23 +204,31 @@ export default function index(props) {
                     props.navigation.navigate('covidtestkitscan')
                 }
             />
+            {
+                shouldShow ? (
+                    <Button
+                        Title='Download Report'
+                        style={{ margin: 15 }}
+                        onPress={() => {
+                            checkPermission()
+                        }}
+                        onError={(err) => {
+                            console.log('Error', err)
+                        }}
+                    />
+                ) : null
+            }
 
-            <Button
-                calling={pdfValue ? false : true}
-                Title='Download Report'
-                style={{ margin: 15 }}
-                onPress={() => {
-                    checkPermission()
-                }}
-            />
-            <Modal visible={invoiceModal} animationType='slide' onRequestClose={() => setInvoiceModal(false)}>
+            {/* {console.log("Ganesh URL "+JSON.stringify(resources))} */}
+            {/* <Modal visible={invoiceModal} animationType='slide' onRequestClose={() => setInvoiceModal(false)}>
                 <View style={{ flex: 1, }}>
                     <PDFView
                         fadeInDuration={250.0}
                         style={{ flex: 1 }}
-                        resource={resources['url']}
-                        resourceType={resourceType}
-                        // onLoad={() => console.warn(`PDF rendered from ${resources.url}`)}
+                        resource={resources.url!=undefined&&resources.url!=null?resources.url:null}
+                        // resource={resources.url}
+                        resourceType={'url'}
+                        onLoad={() => console.warn(`PDF rendered from ${'url'}`)}
                         onError={(error) => console.warn('Cannot render PDF', error)}
                     />
                     <View style={{ height: 50, flexDirection: 'row', margin: 10 }}>
@@ -224,11 +239,11 @@ export default function index(props) {
                         <TouchableOpacity onPress={() => shareInvoice()}
                             style={{ flex: 1, backgroundColor: Config.dark, borderRadius: 10, justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
                             <Text style={{ fontFamily: Config.semi_bold, color: 'white', marginHorizontal: 5 }}>share</Text>
-                            {/* <Icon1 name='sharealt' size={20} color='white'/> */}
+                            <Icon1 name='sharealt' size={20} color='white'/>
                         </TouchableOpacity>
                     </View>
                 </View>
-            </Modal>
+            </Modal> */}
         </View>
     )
 }

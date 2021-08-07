@@ -10,27 +10,27 @@ const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 
 export default class ReScanScreen extends Component {
-     
+
     render() {
-        return(
-            <View style={{flex: 1}}>
-                 <Header
-                Title='Scan Details'
-                onPressBack={() => this.props.navigation.navigate('covidtestkitscan',{data:'rescan'})}
-            />
-                <View style={{flex:1, alignItems: 'center', alignSelf: 'center',justifyContent:'center',alignContent:'center'}}>
-                <Text style={{color:'#000',fontSize:15}}>Image Not Recognized, Re Scan to get Result</Text>
+        return (
+            <View style={{ flex: 1 }}>
+                <Header
+                    Title='Scan Details'
+                    onPressBack={() => this.props.navigation.navigate('covidtestkitscan', { data: 'rescan' })}
+                />
+                <View style={{ flex: 1, alignItems: 'center', alignSelf: 'center', justifyContent: 'center', alignContent: 'center' }}>
+                    <Text style={{ color: '#000', fontSize: 15 }}>Image Not Recognized, Re Scan to get Result</Text>
 
                 </View>
 
                 <View style={styles.footer}>
-                    <TouchableOpacity 
-                               style = {styles.button}
-                               onPress = {() => {
-                                   this.props.navigation.navigate('covidtestkitscan',{data:'rescan'})
-                               }}
-                               >
-                        <Text style={{color:'#FFF',fontSize:20}}>Re Scan</Text>
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={() => {
+                            this.props.navigation.navigate('covidtestkitscan', { data: 'rescan' })
+                        }}
+                    >
+                        <Text style={{ color: '#FFF', fontSize: 20 }}>Re Scan</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
 
     button: {
         elevation: 5,
-        backgroundColor: '#4C95B9',
+        backgroundColor: '#FCB913',
         justifyContent: "center",
         flexDirection: "row",
         alignItems: "center",
@@ -59,5 +59,5 @@ const styles = StyleSheet.create({
         right: 10,
         bottom: 10,
         borderRadius: 5,
-      },
+    },
 })

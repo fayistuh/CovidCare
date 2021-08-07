@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
         width: 50,
         height: 50,
         // color: 'darkorange',
-        color: '#4C95B9',
+        color: '#FCB913',
         fontSize: 18,
         // fontFamily: font.medium,
         backgroundColor: 'white',

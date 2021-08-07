@@ -25,7 +25,7 @@ const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 
 export default function CovidTestKitScanScreen({ navigation, route }) {
-   const { code, testId } = route.params;
+    const { code, testId } = route.params;
     // const code = 100;
     // const testId =110;
 
@@ -40,17 +40,16 @@ export default function CovidTestKitScanScreen({ navigation, route }) {
             <DocumentScanner
                 TestResult
                 TestID={testId}
-                onFailureAdharRequest={(res, testImage)=>{
-                    // navigation.navigate('ReScanScreen');
-                    navigation.navigate('testresult', { covidTestKitScanDetails, testImage, code, testId })
+                onFailureAdharRequest={(res, testImage) => {
+                    navigation.navigate('ReScanScreen');
+                    // navigation.navigate('testresult', { covidTestKitScanDetails, testImage, code, testId })
                 }}
                 onSuccessAdharRequest={(res, testImage) => {
                     setCovidTestKitScanDetails(res)
                     var covidTestKitScanDetails = res
                     console.warn('TEST IMAGE IS', testImage)
-                    console.log('------------------Test Result------------Sugan-----------'+JSON.stringify(res))
-                    if(res.code===400)
-                    {
+                    console.log('------------------Test Result------------Sugan-----------' + JSON.stringify(res))
+                    if (res.code === 400) {
                         Snackbar.show({
                             duration: Snackbar.LENGTH_LONG,
                             text: "Image is not recognisable",
@@ -59,19 +58,17 @@ export default function CovidTestKitScanScreen({ navigation, route }) {
                         // navigation.navigate('covidtestkitscan');
                         navigation.navigate('testresult', { covidTestKitScanDetails, testImage, code, testId })
                     }
-                    else
-                    {
-                    navigation.navigate('testresult', { covidTestKitScanDetails, testImage, code, testId })
-                    }   
+                    else {
+                        navigation.navigate('testresult', { covidTestKitScanDetails, testImage, code, testId })
+                    }
                     console.warn(res)
                 }}
                 onSuccessAdharRequest={(res, testImage) => {
                     setCovidTestKitScanDetails(res)
                     var covidTestKitScanDetails = res
                     console.warn('TEST IMAGE IS', testImage)
-                    console.log('------------------Test Result------------Sugan-----------'+JSON.stringify(res))
-                    if(res.code===400)
-                    {
+                    console.log('------------------Test Result------------Sugan-----------' + JSON.stringify(res))
+                    if (res.code === 400) {
                         Snackbar.show({
                             duration: Snackbar.LENGTH_LONG,
                             text: "Image is not recognisable",
@@ -80,10 +77,9 @@ export default function CovidTestKitScanScreen({ navigation, route }) {
                         // navigation.navigate('covidtestkitscan');
                         navigation.navigate('testresult', { covidTestKitScanDetails, testImage, code, testId })
                     }
-                    else
-                    {
-                    navigation.navigate('testresult', { covidTestKitScanDetails, testImage, code, testId })
-                    }   
+                    else {
+                        navigation.navigate('testresult', { covidTestKitScanDetails, testImage, code, testId })
+                    }
                     console.warn(res)
                 }}
                 initialImageIs={(image) => {

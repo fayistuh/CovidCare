@@ -13,6 +13,7 @@ import Apiconstants from '../../appConfig/APIConstants'
 import Snackbar from "react-native-snackbar";
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { CommonActions } from '@react-navigation/native';
+import RNRestart from "react-native-restart";
 
 
 
@@ -50,15 +51,18 @@ export default function index(props) {
     const onLogout = async () => {
         try {
             await AsyncStorage.removeItem('@userToken')
-            props.navigation.dispatch(
-                CommonActions.reset({
-                    index: 0,
-                    routes: [
-                        { name: 'onboard' },
 
-                    ],
-                })
-            );
+            await AsyncStorage.clear();
+            RNRestart.Restart();
+            // props.navigation.dispatch(
+            //     CommonActions.reset({
+            //         index: 0,
+            //         routes: [
+            //             { name: 'onboard' },
+
+            //         ],
+            //     })
+            // );
         } catch (e) {
             // remove error
         }

@@ -5,7 +5,6 @@ import { createStackNavigator, CardStyleInterpolators, NavigationActions } from 
 import { createNativeStackNavigator } from 'react-native-screens/native-stack';
 import { useContext, component } from 'react'
 import { enableScreens } from 'react-native-screens';
-import { View, SafeAreaView } from 'react-native';
 
 import AppContext from '../appConfig/constant'
 
@@ -29,6 +28,9 @@ import VerifyAdhar from '../screens/VerifyAdharScreen/index'
 import PatientDetails from '../screens/PatientDetailsEnteringScreen/index'
 import VideoScreen from '../screens/VideoScreen'
 import ReScanScreen from '../screens/ReScanScreen'
+import pdfScreen from '../screens/pdfscreen'
+import { SafeAreaView } from 'react-native';
+
 enableScreens();
 const Stack = createStackNavigator();
 
@@ -65,6 +67,7 @@ const MyStack = () => {
                     <Stack.Screen name='verifyadhar' component={VerifyAdhar} />
                     <Stack.Screen name='users' component={Users} />
                     <Stack.Screen name='patientdetails' component={PatientDetails} />
+                    <Stack.Screen name='pdfScreen' component={pdfScreen} />
 
 
 
